@@ -1,0 +1,949 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="一進総業株式会社は、建築工事業全般を手がける総合建設会社です。大工工事、左官工事、屋根工事、防水工事など14種の専門工事で、全国のお客様の信頼にお応えします。">
+    <title>一進総業株式会社 | 総合建設のプロフェッショナル - Wave Edition</title>
+    
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
+    <!-- Three.js -->
+    <script src="https://unpkg.com/three@0.155.0/build/three.min.js"></script>
+    
+    <!-- GSAP CDN -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.4/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.4/ScrollTrigger.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.4/TextPlugin.min.js"></script>
+    
+    <!-- Custom Configuration -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'primary': '#1e40af',
+                        'secondary': '#064e3b',
+                        'accent': '#0891b2',
+                    },
+                    fontFamily: {
+                        'sans': ['Helvetica Neue', 'Arial', 'Hiragino Sans', 'Meiryo', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <style>
+        /* Loading screen */
+        .loader-wrapper {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #000428 0%, #004e92 100%);
+            z-index: 9999;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .loader {
+            width: 80px;
+            height: 80px;
+            position: relative;
+        }
+        
+        .loader::before,
+        .loader::after {
+            content: '';
+            position: absolute;
+            border: 3px solid rgba(8, 145, 178, 0.3);
+            border-top-color: #0891b2;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        
+        .loader::before {
+            width: 80px;
+            height: 80px;
+        }
+        
+        .loader::after {
+            width: 60px;
+            height: 60px;
+            top: 10px;
+            left: 10px;
+            animation-direction: reverse;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        /* Wave Canvas */
+        #wave-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            background: linear-gradient(135deg, #000428 0%, #004e92 100%);
+        }
+        
+        /* Hero overlay */
+        .hero-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(ellipse at center, transparent 20%, rgba(0,4,40,0.6) 100%);
+            pointer-events: none;
+        }
+        
+        /* Text with wave glow effect */
+        .wave-text {
+            text-shadow: 0 0 30px rgba(8, 145, 178, 0.8), 0 0 60px rgba(8, 145, 178, 0.4);
+        }
+        
+        /* Glass morphism effect */
+        .glass {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        /* Glow effects */
+        .glow-cyan {
+            box-shadow: 0 0 30px rgba(8, 145, 178, 0.5);
+            transition: box-shadow 0.3s ease;
+        }
+        
+        .glow-cyan:hover {
+            box-shadow: 0 0 50px rgba(8, 145, 178, 0.8);
+        }
+        
+        /* 3D card effects */
+        .card-3d {
+            transform-style: preserve-3d;
+            transition: transform 0.6s;
+        }
+        
+        .card-3d:hover {
+            transform: rotateY(5deg) rotateX(5deg) scale(1.02);
+        }
+        
+        /* Scroll indicator */
+        .scroll-indicator {
+            position: absolute;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 30px;
+            height: 50px;
+            border: 2px solid rgba(8, 145, 178, 0.8);
+            border-radius: 15px;
+            opacity: 0.7;
+            animation: pulse 2s infinite;
+        }
+        
+        .scroll-indicator::before {
+            content: '';
+            position: absolute;
+            top: 8px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 6px;
+            height: 6px;
+            background: #0891b2;
+            border-radius: 50%;
+            animation: scroll-indicator 2s infinite;
+            box-shadow: 0 0 10px rgba(8, 145, 178, 0.8);
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 0.7; }
+            50% { opacity: 1; }
+        }
+        
+        @keyframes scroll-indicator {
+            0% { top: 8px; opacity: 1; }
+            100% { top: 30px; opacity: 0; }
+        }
+        
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: rgba(0, 0, 0, 0.3);
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(135deg, #0891b2, #1e40af);
+            border-radius: 4px;
+        }
+        
+        /* Count up numbers */
+        .count-up {
+            font-weight: bold;
+            font-size: 2.5rem;
+            color: #0891b2;
+            text-shadow: 0 0 20px rgba(8, 145, 178, 0.5);
+        }
+        
+        /* Floating animation */
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+        
+        .float-animation {
+            animation: float 3s ease-in-out infinite;
+        }
+    </style>
+</head>
+<body class="bg-black overflow-x-hidden">
+    <!-- Loading screen -->
+    <div class="loader-wrapper">
+        <div class="loader"></div>
+    </div>
+    
+    <!-- Wave Canvas Background -->
+    <canvas id="wave-canvas"></canvas>
+
+    <!-- Navigation -->
+    <nav class="glass fixed w-full top-0 z-50 border-b border-white/10">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <span class="text-2xl font-bold bg-gradient-to-r from-accent to-blue-400 bg-clip-text text-transparent logo wave-text">
+                        一進総業
+                    </span>
+                </div>
+                <div class="hidden md:flex items-center space-x-8">
+                    <a href="#home" class="text-white/80 hover:text-accent transition duration-300">ホーム</a>
+                    <a href="#services" class="text-white/80 hover:text-accent transition duration-300">事業内容</a>
+                    <a href="#about" class="text-white/80 hover:text-accent transition duration-300">会社概要</a>
+                    <a href="#contact" class="bg-gradient-to-r from-accent to-blue-500 text-white px-4 py-2 rounded-lg hover:from-blue-500 hover:to-accent transition duration-300 glow-cyan">
+                        お問い合わせ
+                    </a>
+                </div>
+                <!-- Mobile menu button -->
+                <div class="md:hidden flex items-center">
+                    <button onclick="toggleMenu()" class="text-white/80 hover:text-accent">
+                        <i class="fas fa-bars text-2xl"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <!-- Mobile menu -->
+        <div id="mobile-menu" class="hidden md:hidden glass border-t border-white/10">
+            <div class="px-2 pt-2 pb-3 space-y-1">
+                <a href="#home" class="block px-3 py-2 text-white/80 hover:text-accent">ホーム</a>
+                <a href="#services" class="block px-3 py-2 text-white/80 hover:text-accent">事業内容</a>
+                <a href="#about" class="block px-3 py-2 text-white/80 hover:text-accent">会社概要</a>
+                <a href="#contact" class="block px-3 py-2 text-white/80 hover:text-accent">お問い合わせ</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="home" class="relative min-h-screen flex items-center justify-center">
+        <div class="hero-overlay"></div>
+        
+        <!-- Content -->
+        <div class="relative z-10">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center">
+                    <h1 class="text-5xl md:text-7xl font-bold text-white mb-6 hero-title wave-text float-animation">
+                        <span class="hero-text"></span>
+                    </h1>
+                    <p class="text-2xl md:text-3xl text-blue-200 mb-8 hero-subtitle">
+                        一進総業株式会社
+                    </p>
+                    <p class="text-lg md:text-xl text-white/80 mb-12 max-w-3xl mx-auto hero-description">
+                        14種の専門工事ライセンスを持つ総合建設会社として、<br>
+                        全国のお客様に最高品質の施工をお届けします
+                    </p>
+                    <div class="space-x-4 hero-buttons">
+                        <a href="#services" class="inline-block glass text-white px-8 py-3 rounded-lg font-semibold hover:bg-white/20 transition duration-300 transform hover:scale-105 glow-cyan">
+                            事業内容を見る
+                        </a>
+                        <a href="#contact" class="inline-block border-2 border-accent text-accent px-8 py-3 rounded-lg font-semibold hover:bg-accent hover:text-white transition duration-300 transform hover:scale-105">
+                            お問い合わせ
+                        </a>
+                    </div>
+                    <!-- Scroll indicator -->
+                    <div class="scroll-indicator mt-16"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Services Section -->
+    <section id="services" class="py-20 glass border-y border-white/10">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl md:text-4xl font-bold text-white mb-4 wave-text">
+                    事業内容
+                </h2>
+                <p class="text-lg text-white/70">
+                    14種の専門工事で、あらゆる建設ニーズにお応えします
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 service-cards">
+                <!-- Service Card 1 -->
+                <div class="glass rounded-xl p-6 hover:bg-white/20 transition duration-300 transform hover:-translate-y-2 service-card card-3d">
+                    <div class="w-14 h-14 bg-gradient-to-br from-blue-500 to-blue-600 rounded-lg flex items-center justify-center mb-4 glow-cyan">
+                        <i class="fas fa-building text-white text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold text-white mb-2">建築工事業</h3>
+                    <p class="text-white/70">
+                        建物の新築・改修・増築など、建築工事全般を手がけます
+                    </p>
+                </div>
+
+                <!-- Service Card 2 -->
+                <div class="glass rounded-xl p-6 hover:bg-white/20 transition duration-300 transform hover:-translate-y-2 service-card card-3d">
+                    <div class="w-14 h-14 bg-gradient-to-br from-green-500 to-green-600 rounded-lg flex items-center justify-center mb-4 glow-cyan">
+                        <i class="fas fa-hammer text-white text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold text-white mb-2">大工工事業</h3>
+                    <p class="text-white/70">
+                        木造建築の骨組みから内装まで、熟練の技術で施工します
+                    </p>
+                </div>
+
+                <!-- Service Card 3 -->
+                <div class="glass rounded-xl p-6 hover:bg-white/20 transition duration-300 transform hover:-translate-y-2 service-card card-3d">
+                    <div class="w-14 h-14 bg-gradient-to-br from-purple-500 to-purple-600 rounded-lg flex items-center justify-center mb-4 glow-cyan">
+                        <i class="fas fa-home text-white text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold text-white mb-2">屋根工事業</h3>
+                    <p class="text-white/70">
+                        屋根の葺き替えから修理まで、雨漏りのない安心を提供します
+                    </p>
+                </div>
+
+                <!-- Service Card 4 -->
+                <div class="glass rounded-xl p-6 hover:bg-white/20 transition duration-300 transform hover:-translate-y-2 service-card card-3d">
+                    <div class="w-14 h-14 bg-gradient-to-br from-cyan-500 to-cyan-600 rounded-lg flex items-center justify-center mb-4 glow-cyan">
+                        <i class="fas fa-tint text-white text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold text-white mb-2">防水工事業</h3>
+                    <p class="text-white/70">
+                        建物を水から守る、確実な防水施工を実施します
+                    </p>
+                </div>
+
+                <!-- Service Card 5 -->
+                <div class="glass rounded-xl p-6 hover:bg-white/20 transition duration-300 transform hover:-translate-y-2 service-card card-3d">
+                    <div class="w-14 h-14 bg-gradient-to-br from-orange-500 to-orange-600 rounded-lg flex items-center justify-center mb-4 glow-cyan">
+                        <i class="fas fa-fire text-white text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold text-white mb-2">熱絶縁工事業</h3>
+                    <p class="text-white/70">
+                        省エネと快適性を実現する断熱工事を提供します
+                    </p>
+                </div>
+
+                <!-- Service Card 6 -->
+                <div class="glass rounded-xl p-6 hover:bg-white/20 transition duration-300 transform hover:-translate-y-2 service-card card-3d">
+                    <div class="w-14 h-14 bg-gradient-to-br from-red-500 to-red-600 rounded-lg flex items-center justify-center mb-4 glow-cyan">
+                        <i class="fas fa-ellipsis-h text-white text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold text-white mb-2">その他専門工事</h3>
+                    <p class="text-white/70">
+                        左官・建具・電気通信・鉄筋など9種の専門工事に対応
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="py-20 glass border-b border-white/10">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl md:text-4xl font-bold text-white mb-4 wave-text">
+                    選ばれる理由
+                </h2>
+                <p class="text-lg text-white/70">
+                    一進総業が信頼される3つのポイント
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="text-center feature-item">
+                    <div class="w-20 h-20 bg-gradient-to-br from-accent to-blue-500 rounded-full flex items-center justify-center mx-auto mb-4 feature-icon glow-cyan float-animation">
+                        <i class="fas fa-certificate text-white text-3xl"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold text-white mb-2">
+                        <span class="count-up" data-target="14">0</span>種の専門資格
+                    </h3>
+                    <p class="text-white/70">
+                        多岐にわたる建設工事の専門資格を保有し、ワンストップで対応可能
+                    </p>
+                </div>
+
+                <div class="text-center feature-item">
+                    <div class="w-20 h-20 bg-gradient-to-br from-accent to-blue-500 rounded-full flex items-center justify-center mx-auto mb-4 feature-icon glow-cyan float-animation" style="animation-delay: 0.5s;">
+                        <i class="fas fa-map-marked-alt text-white text-3xl"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold text-white mb-2">
+                        <span class="count-up" data-target="47">0</span>都道府県対応
+                    </h3>
+                    <p class="text-white/70">
+                        日本全国どこでも、高品質な施工サービスをご提供します
+                    </p>
+                </div>
+
+                <div class="text-center feature-item">
+                    <div class="w-20 h-20 bg-gradient-to-br from-accent to-blue-500 rounded-full flex items-center justify-center mx-auto mb-4 feature-icon glow-cyan float-animation" style="animation-delay: 1s;">
+                        <i class="fas fa-handshake text-white text-3xl"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold text-white mb-2">
+                        <span class="count-up" data-target="500">0</span>+プロジェクト
+                    </h3>
+                    <p class="text-white/70">
+                        2019年創業以来、数多くのプロジェクトで信頼を積み重ねています
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Company Info Section -->
+    <section id="about" class="py-20 glass border-b border-white/10">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="glass rounded-2xl p-8 md:p-12 border border-white/20">
+                <h2 class="text-3xl md:text-4xl font-bold text-white mb-8 text-center wave-text">
+                    会社概要
+                </h2>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="border-b border-white/20 pb-4">
+                        <p class="text-white/60 mb-1">会社名</p>
+                        <p class="text-lg font-semibold text-white">一進総業株式会社</p>
+                    </div>
+                    
+                    <div class="border-b border-white/20 pb-4">
+                        <p class="text-white/60 mb-1">法人番号</p>
+                        <p class="text-lg font-semibold text-white">0500-01-056997</p>
+                    </div>
+                    
+                    <div class="border-b border-white/20 pb-4">
+                        <p class="text-white/60 mb-1">設立</p>
+                        <p class="text-lg font-semibold text-white">令和元年7月18日</p>
+                    </div>
+                    
+                    <div class="border-b border-white/20 pb-4">
+                        <p class="text-white/60 mb-1">資本金</p>
+                        <p class="text-lg font-semibold text-white">297万円</p>
+                    </div>
+                    
+                    <div class="border-b border-white/20 pb-4">
+                        <p class="text-white/60 mb-1">所在地</p>
+                        <p class="text-lg font-semibold text-white">茨城県土浦市小松一丁目24番37号</p>
+                    </div>
+                    
+                    <div class="border-b border-white/20 pb-4">
+                        <p class="text-white/60 mb-1">代表取締役</p>
+                        <p class="text-lg font-semibold text-white">浦井 裕一</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section id="contact" class="py-20 bg-gradient-to-r from-accent to-blue-600">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <h2 class="text-3xl md:text-4xl font-bold text-white mb-4 wave-text">
+                プロジェクトのご相談はお気軽に
+            </h2>
+            <p class="text-xl text-blue-100 mb-8">
+                建設工事のことなら、何でもご相談ください
+            </p>
+            <a href="mailto:info@isshin-sogyo.com" class="inline-block glass text-white px-8 py-4 rounded-lg font-semibold hover:bg-white/20 transition duration-300 transform hover:scale-105 text-lg glow-cyan">
+                <i class="fas fa-envelope mr-2"></i>
+                お問い合わせはこちら
+            </a>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-black/50 text-white/60 py-12 border-t border-white/10">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div>
+                    <h3 class="text-white text-lg font-semibold mb-4">一進総業株式会社</h3>
+                    <p class="text-sm">
+                        総合建設のプロフェッショナルとして、<br>
+                        お客様の夢を形にします。
+                    </p>
+                </div>
+                
+                <div>
+                    <h3 class="text-white text-lg font-semibold mb-4">サービス</h3>
+                    <ul class="space-y-2 text-sm">
+                        <li>建築工事業</li>
+                        <li>大工・左官・屋根工事</li>
+                        <li>防水・熱絶縁工事</li>
+                        <li>その他専門工事</li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h3 class="text-white text-lg font-semibold mb-4">お問い合わせ</h3>
+                    <p class="text-sm mb-2">
+                        〒300-0823<br>
+                        茨城県土浦市小松一丁目24番37号
+                    </p>
+                    <a href="mailto:info@isshin-sogyo.com" class="text-accent hover:text-blue-400 transition">
+                        info@isshin-sogyo.com
+                    </a>
+                </div>
+            </div>
+            
+            <div class="border-t border-white/20 mt-8 pt-8 text-center">
+                <p class="text-sm">
+                    &copy; 2024 一進総業株式会社 All rights reserved.
+                </p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JavaScript -->
+    <script>
+        // Wave animation system inspired by ICS Creative
+        let scene, camera, renderer;
+        let waveLines = [];
+        let particles = [];
+        let dustParticles = [];
+        let mouseX = 0, mouseY = 0;
+        let time = 0;
+        
+        // Simplex noise implementation (simplified version)
+        class SimplexNoise {
+            constructor() {
+                this.grad3 = [
+                    [1,1,0],[-1,1,0],[1,-1,0],[-1,-1,0],
+                    [1,0,1],[-1,0,1],[1,0,-1],[-1,0,-1],
+                    [0,1,1],[0,-1,1],[0,1,-1],[0,-1,-1]
+                ];
+                
+                this.p = [];
+                for(let i = 0; i < 256; i++) {
+                    this.p[i] = Math.floor(Math.random() * 256);
+                }
+                
+                for(let i = 0; i < 512; i++) {
+                    this.perm = this.p[i & 255];
+                }
+            }
+            
+            noise3d(x, y, z) {
+                // Simplified noise function
+                return (Math.sin(x * 0.1 + time * 0.001) * 
+                        Math.cos(y * 0.1 + time * 0.002) * 
+                        Math.sin(z * 0.1 + time * 0.0015)) * 0.5;
+            }
+        }
+        
+        let noiseInstance; // Global noise instance
+        
+        function initWaveAnimation() {
+            // Initialize noise after defining the class
+            noiseInstance = new SimplexNoise();
+            
+            // Scene setup
+            scene = new THREE.Scene();
+            scene.fog = new THREE.Fog(0x000428, 200, 4000);
+            
+            // Camera setup
+            camera = new THREE.PerspectiveCamera(30, window.innerWidth / window.innerHeight, 1, 100000);
+            camera.position.set(0, 50, 1000);
+            camera.lookAt(new THREE.Vector3(0, 0, 0));
+            
+            // Renderer setup
+            renderer = new THREE.WebGLRenderer({
+                canvas: document.getElementById('wave-canvas'),
+                antialias: true,
+                alpha: true
+            });
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            renderer.setPixelRatio(window.devicePixelRatio);
+            renderer.setClearColor(0x000428, 1);
+            
+            // Lighting
+            const ambientLight = new THREE.AmbientLight(0x404040, 0.5);
+            scene.add(ambientLight);
+            
+            const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
+            directionalLight.position.set(1, 1, 1);
+            scene.add(directionalLight);
+            
+            // Create wave lines
+            createWaveLines();
+            
+            // Create particles
+            createParticles();
+            
+            // Create dust particles
+            createDustParticles();
+            
+            // Mouse movement
+            document.addEventListener('mousemove', onMouseMove);
+            
+            // Window resize
+            window.addEventListener('resize', onWindowResize);
+            
+            // Start animation
+            animate();
+        }
+        
+        function createWaveLines() {
+            const maxLines = 12;
+            
+            for (let j = 0; j < maxLines; j++) {
+                const linesGroup = [];
+                const step = 80;
+                
+                for (let k = 0; k < step; k++) {
+                    const material = new THREE.LineBasicMaterial({
+                        color: new THREE.Color().setHSL(
+                            0.5 + (j / maxLines) * 0.3,
+                            0.7,
+                            0.2 + (k / step) * 0.6
+                        ),
+                        transparent: true,
+                        opacity: 0.3 * (k / step) * (j / maxLines) + 0.1,
+                        blending: THREE.AdditiveBlending
+                    });
+                    
+                    const geometry = new THREE.BufferGeometry();
+                    const positions = [];
+                    const max = 100;
+                    const lineWidth = 30;
+                    
+                    for (let i = 0; i < max; i++) {
+                        positions.push(
+                            (max / 2 - i) * lineWidth,
+                            0,
+                            (j - maxLines / 2) * 100
+                        );
+                    }
+                    
+                    geometry.setAttribute('position', new THREE.Float32BufferAttribute(positions, 3));
+                    
+                    const line = new THREE.Line(geometry, material);
+                    scene.add(line);
+                    linesGroup.push(line);
+                }
+                
+                waveLines.push(linesGroup);
+            }
+        }
+        
+        function createParticles() {
+            const particleCount = 200;
+            
+            for (let i = 0; i < particleCount; i++) {
+                const geometry = new THREE.SphereGeometry(2, 8, 8);
+                const material = new THREE.MeshBasicMaterial({
+                    color: new THREE.Color().setHSL(
+                        0.5 + Math.random() * 0.3,
+                        0.7,
+                        0.6 + Math.random() * 0.3
+                    ),
+                    transparent: true,
+                    opacity: 0.6,
+                    blending: THREE.AdditiveBlending
+                });
+                
+                const particle = new THREE.Mesh(geometry, material);
+                particle.position.set(
+                    (Math.random() - 0.5) * 2000,
+                    Math.random() * 1000,
+                    (Math.random() - 0.5) * 2000
+                );
+                
+                particle.userData = {
+                    originalY: particle.position.y,
+                    speed: Math.random() * 0.02 + 0.01,
+                    amplitude: Math.random() * 100 + 50
+                };
+                
+                scene.add(particle);
+                particles.push(particle);
+            }
+        }
+        
+        function createDustParticles() {
+            const dustCount = 500;
+            const positions = [];
+            const colors = [];
+            const sizes = [];
+            
+            for (let i = 0; i < dustCount; i++) {
+                positions.push(
+                    (Math.random() - 0.5) * 3000,
+                    Math.random() * 2000 - 500,
+                    (Math.random() - 0.5) * 3000
+                );
+                
+                const color = new THREE.Color().setHSL(
+                    0.5 + Math.random() * 0.2,
+                    0.5,
+                    0.3 + Math.random() * 0.4
+                );
+                colors.push(color.r, color.g, color.b);
+                sizes.push(Math.random() * 3 + 1);
+            }
+            
+            const geometry = new THREE.BufferGeometry();
+            geometry.setAttribute('position', new THREE.Float32BufferAttribute(positions, 3));
+            geometry.setAttribute('color', new THREE.Float32BufferAttribute(colors, 3));
+            geometry.setAttribute('size', new THREE.Float32BufferAttribute(sizes, 1));
+            
+            const material = new THREE.PointsMaterial({
+                size: 2,
+                vertexColors: true,
+                transparent: true,
+                opacity: 0.6,
+                blending: THREE.AdditiveBlending
+            });
+            
+            const dustParticleSystem = new THREE.Points(geometry, material);
+            scene.add(dustParticleSystem);
+            dustParticles.push(dustParticleSystem);
+        }
+        
+        function updateWaves(noise) {
+            waveLines.forEach((lineGroup, j) => {
+                lineGroup.forEach((line, k) => {
+                    const positions = line.geometry.attributes.position.array;
+                    
+                    for (let i = 0; i < positions.length; i += 3) {
+                        const waveTime = time * 0.001 + k * 0.05;
+                        const waveY = noise.noise3d(i / 300, waveTime, j * 0.1) * 200;
+                        positions[i + 1] = waveY;
+                    }
+                    
+                    line.geometry.attributes.position.needsUpdate = true;
+                });
+            });
+        }
+        
+        function updateParticles() {
+            particles.forEach((particle, i) => {
+                const userData = particle.userData;
+                particle.position.y = userData.originalY + Math.sin(time * userData.speed + i) * userData.amplitude;
+                particle.rotation.x += 0.01;
+                particle.rotation.y += 0.02;
+            });
+        }
+        
+        function updateDustParticles() {
+            dustParticles.forEach(system => {
+                const positions = system.geometry.attributes.position.array;
+                
+                for (let i = 0; i < positions.length; i += 3) {
+                    positions[i + 1] -= 0.5; // Fall down
+                    if (positions[i + 1] < -500) {
+                        positions[i + 1] = 2000; // Reset to top
+                    }
+                }
+                
+                system.geometry.attributes.position.needsUpdate = true;
+                system.rotation.y += 0.0005;
+            });
+        }
+        
+        function onMouseMove(event) {
+            mouseX = (event.clientX - window.innerWidth / 2) * 0.001;
+            mouseY = (event.clientY - window.innerHeight / 2) * 0.001;
+        }
+        
+        function onWindowResize() {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        }
+        
+        function animate() {
+            requestAnimationFrame(animate);
+            
+            time++;
+            
+            // Camera movement
+            camera.position.x = Math.cos(time * 0.0005) * 500;
+            camera.position.y = Math.sin(time * 0.0005) * 100 + 50;
+            camera.lookAt(scene.position);
+            
+            // Mouse interaction
+            camera.position.x += mouseX * 100;
+            camera.position.y += -mouseY * 50;
+            
+            // Update animations
+            updateWaves(noiseInstance);
+            updateParticles();
+            updateDustParticles();
+            
+            renderer.render(scene, camera);
+        }
+        
+        // GSAP Animations
+        gsap.registerPlugin(ScrollTrigger, TextPlugin);
+        
+        // Initialize everything after page load
+        window.addEventListener('load', () => {
+            try {
+                console.log('Starting initialization...');
+                // Initialize wave animation
+                initWaveAnimation();
+                console.log('Wave animation initialized');
+                
+                // Hide loader
+                gsap.to('.loader-wrapper', {
+                    opacity: 0,
+                    duration: 1,
+                    ease: 'power2.inOut',
+                    onComplete: function() {
+                        document.querySelector('.loader-wrapper').style.display = 'none';
+                    }
+                });
+            } catch (error) {
+                console.error('Error initializing:', error);
+                // Hide loader even if there's an error
+                document.querySelector('.loader-wrapper').style.display = 'none';
+            }
+            
+            // Hero text typing animation
+            gsap.to('.hero-text', {
+                duration: 2,
+                text: {
+                    value: '建設の未来を創造する',
+                    delimiter: ''
+                },
+                ease: 'none',
+                delay: 0.5
+            });
+            
+            // Hero elements fade in
+            gsap.timeline()
+                .from('.hero-subtitle', {
+                    opacity: 0,
+                    y: 30,
+                    duration: 1,
+                    delay: 1.5
+                })
+                .from('.hero-description', {
+                    opacity: 0,
+                    y: 30,
+                    duration: 1
+                }, '-=0.5')
+                .from('.hero-buttons a', {
+                    opacity: 0,
+                    y: 30,
+                    duration: 0.8,
+                    stagger: 0.2
+                }, '-=0.5')
+                .from('.scroll-indicator', {
+                    opacity: 0,
+                    y: -20,
+                    duration: 1
+                }, '-=0.3');
+        });
+        
+        // Service cards scroll animation
+        gsap.utils.toArray('.service-card').forEach((card, index) => {
+            gsap.from(card, {
+                scrollTrigger: {
+                    trigger: card,
+                    start: 'top 80%',
+                    toggleActions: 'play none none reverse'
+                },
+                opacity: 0,
+                y: 50,
+                rotation: 5,
+                duration: 0.8,
+                delay: index * 0.1,
+                ease: 'power3.out'
+            });
+        });
+        
+        // Feature items animation
+        gsap.utils.toArray('.feature-item').forEach((item, index) => {
+            gsap.from(item, {
+                scrollTrigger: {
+                    trigger: item,
+                    start: 'top 80%',
+                    toggleActions: 'play none none reverse'
+                },
+                opacity: 0,
+                scale: 0.8,
+                duration: 1,
+                delay: index * 0.2,
+                ease: 'back.out(1.7)'
+            });
+        });
+        
+        // Count up animation
+        const countUpElements = document.querySelectorAll('.count-up');
+        countUpElements.forEach(element => {
+            const target = parseInt(element.getAttribute('data-target'));
+            
+            ScrollTrigger.create({
+                trigger: element,
+                start: 'top 80%',
+                once: true,
+                onEnter: () => {
+                    gsap.to(element, {
+                        duration: 2,
+                        textContent: target,
+                        roundProps: 'textContent',
+                        ease: 'power2.out'
+                    });
+                }
+            });
+        });
+        
+        // Mobile menu toggle
+        function toggleMenu() {
+            const menu = document.getElementById('mobile-menu');
+            menu.classList.toggle('hidden');
+        }
+        
+        // Smooth scroll
+        gsap.utils.toArray('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    gsap.to(window, {
+                        duration: 1,
+                        scrollTo: target,
+                        ease: 'power3.inOut'
+                    });
+                }
+                document.getElementById('mobile-menu').classList.add('hidden');
+            });
+        });
+    </script>
+    
+    <!-- ScrollToPlugin for GSAP -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.4/ScrollToPlugin.min.js"></script>
+</body>
+</html>
