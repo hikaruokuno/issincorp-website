@@ -17,6 +17,9 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.4/ScrollTrigger.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.4/TextPlugin.min.js"></script>
     
+    <!-- Three.js for wave effect -->
+    <script src="https://unpkg.com/three@0.155.0/build/three.min.js"></script>
+    
     <!-- Custom Configuration -->
     <script>
         tailwind.config = {
@@ -137,13 +140,88 @@
             font-weight: bold;
             font-size: 2.5rem;
         }
+        
+        /* 波形キャンバス */
+        #wave-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            opacity: 0.3;
+            pointer-events: none;
+        }
+        
+        /* コンテンツを前面に */
+        #home .relative.z-10 {
+            position: relative;
+            z-index: 2;
+        }
+        
+        /* セクショングラデーション */
+        .section-gradient {
+            background: linear-gradient(135deg, #0f0f23 0%, #1a1a3e 50%, #0f0f23 100%);
+            position: relative;
+        }
+        
+        .section-gradient-alt {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            position: relative;
+        }
+        
+        /* グラスモーフィズムカード */
+        .glass-card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+        }
+        
+        /* ネオンテキスト効果 */
+        .neon-text {
+            text-shadow: 0 0 10px rgba(8, 145, 178, 0.8),
+                         0 0 20px rgba(8, 145, 178, 0.6),
+                         0 0 30px rgba(8, 145, 178, 0.4);
+            color: #ffffff !important;
+            font-weight: bold;
+        }
+        
+        /* グリッドパターン */
+        .grid-pattern {
+            background-image: 
+                linear-gradient(rgba(8, 145, 178, 0.1) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(8, 145, 178, 0.1) 1px, transparent 1px);
+            background-size: 50px 50px;
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            pointer-events: none;
+        }
+        
+        /* グラデーションボーダー */
+        .gradient-border {
+            position: relative;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 2px;
+        }
+        
+        .gradient-border > * {
+            background: #0f0f23;
+            padding: 1.5rem;
+        }
     </style>
 </head>
-<body class="bg-gray-50">
+<body class="bg-gray-900">
     <!-- ローディング画面 -->
     <div class="loader-wrapper">
         <div class="loader"></div>
     </div>
+    
+    <!-- 波形背景 -->
+    <canvas id="wave-canvas"></canvas>
     <!-- Navigation -->
     <nav class="bg-white shadow-lg fixed w-full top-0 z-50">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -181,7 +259,7 @@
     </nav>
 
     <!-- Hero Section -->
-    <section id="home" class="pt-16 relative overflow-hidden">
+    <section id="home" class="pt-16 relative overflow-hidden" style="background: linear-gradient(135deg, rgba(0,4,40,0.8) 0%, rgba(0,78,146,0.8) 100%);">
         <!-- Background Video -->
         <video autoplay muted loop playsinline class="absolute inset-0 w-full h-full object-cover">
             <source src="assets/videos/Japanese_Construction_Timelapse_Video.mp4" type="video/mp4">
@@ -228,80 +306,81 @@
     </section>
 
     <!-- Services Section -->
-    <section id="services" class="py-20 bg-gray-50">
+    <section id="services" class="py-20 section-gradient relative overflow-hidden">
+        <div class="grid-pattern"></div>
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="text-center mb-16">
-                <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+            <div class="text-center mb-16 relative z-10">
+                <h2 class="text-3xl md:text-4xl font-bold text-white mb-4 neon-text">
                     事業内容
                 </h2>
-                <p class="text-lg text-gray-600">
+                <p class="text-lg text-gray-300">
                     14種の専門工事で、あらゆる建設ニーズにお応えします
                 </p>
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 service-cards">
                 <!-- Service Card 1 -->
-                <div class="bg-white rounded-xl shadow-lg p-6 hover:shadow-2xl transition transform hover:-translate-y-2 service-card card-3d">
+                <div class="glass-card rounded-xl p-6 hover:shadow-2xl transition transform hover:-translate-y-2 service-card card-3d">
                     <div class="w-14 h-14 bg-gradient-to-br from-blue-500 to-blue-600 rounded-lg flex items-center justify-center mb-4">
                         <i class="fas fa-building text-white text-2xl"></i>
                     </div>
-                    <h3 class="text-xl font-semibold text-gray-900 mb-2">建築工事業</h3>
-                    <p class="text-gray-600">
+                    <h3 class="text-xl font-semibold text-white mb-2">建築工事業</h3>
+                    <p class="text-gray-300">
                         建物の新築・改修・増築など、建築工事全般を手がけます
                     </p>
                 </div>
 
                 <!-- Service Card 2 -->
-                <div class="bg-white rounded-xl shadow-lg p-6 hover:shadow-2xl transition transform hover:-translate-y-2 service-card card-3d">
+                <div class="glass-card rounded-xl p-6 hover:shadow-2xl transition transform hover:-translate-y-2 service-card card-3d">
                     <div class="w-14 h-14 bg-gradient-to-br from-green-500 to-green-600 rounded-lg flex items-center justify-center mb-4">
                         <i class="fas fa-hammer text-white text-2xl"></i>
                     </div>
-                    <h3 class="text-xl font-semibold text-gray-900 mb-2">大工工事業</h3>
-                    <p class="text-gray-600">
+                    <h3 class="text-xl font-semibold text-white mb-2">大工工事業</h3>
+                    <p class="text-gray-300">
                         木造建築の骨組みから内装まで、熟練の技術で施工します
                     </p>
                 </div>
 
                 <!-- Service Card 3 -->
-                <div class="bg-white rounded-xl shadow-lg p-6 hover:shadow-2xl transition transform hover:-translate-y-2 service-card card-3d">
+                <div class="glass-card rounded-xl p-6 hover:shadow-2xl transition transform hover:-translate-y-2 service-card card-3d">
                     <div class="w-14 h-14 bg-gradient-to-br from-purple-500 to-purple-600 rounded-lg flex items-center justify-center mb-4">
                         <i class="fas fa-home text-white text-2xl"></i>
                     </div>
-                    <h3 class="text-xl font-semibold text-gray-900 mb-2">屋根工事業</h3>
-                    <p class="text-gray-600">
+                    <h3 class="text-xl font-semibold text-white mb-2">屋根工事業</h3>
+                    <p class="text-gray-300">
                         屋根の葺き替えから修理まで、雨漏りのない安心を提供します
                     </p>
                 </div>
 
                 <!-- Service Card 4 -->
-                <div class="bg-white rounded-xl shadow-lg p-6 hover:shadow-2xl transition transform hover:-translate-y-2 service-card card-3d">
+                <div class="glass-card rounded-xl p-6 hover:shadow-2xl transition transform hover:-translate-y-2 service-card card-3d">
                     <div class="w-14 h-14 bg-gradient-to-br from-cyan-500 to-cyan-600 rounded-lg flex items-center justify-center mb-4">
                         <i class="fas fa-tint text-white text-2xl"></i>
                     </div>
-                    <h3 class="text-xl font-semibold text-gray-900 mb-2">防水工事業</h3>
-                    <p class="text-gray-600">
+                    <h3 class="text-xl font-semibold text-white mb-2">防水工事業</h3>
+                    <p class="text-gray-300">
                         建物を水から守る、確実な防水施工を実施します
                     </p>
                 </div>
 
                 <!-- Service Card 5 -->
-                <div class="bg-white rounded-xl shadow-lg p-6 hover:shadow-2xl transition transform hover:-translate-y-2 service-card card-3d">
+                <div class="glass-card rounded-xl p-6 hover:shadow-2xl transition transform hover:-translate-y-2 service-card card-3d">
                     <div class="w-14 h-14 bg-gradient-to-br from-orange-500 to-orange-600 rounded-lg flex items-center justify-center mb-4">
                         <i class="fas fa-fire text-white text-2xl"></i>
                     </div>
-                    <h3 class="text-xl font-semibold text-gray-900 mb-2">熱絶縁工事業</h3>
-                    <p class="text-gray-600">
+                    <h3 class="text-xl font-semibold text-white mb-2">熱絶縁工事業</h3>
+                    <p class="text-gray-300">
                         省エネと快適性を実現する断熱工事を提供します
                     </p>
                 </div>
 
                 <!-- Service Card 6 -->
-                <div class="bg-white rounded-xl shadow-lg p-6 hover:shadow-2xl transition transform hover:-translate-y-2 service-card card-3d">
+                <div class="glass-card rounded-xl p-6 hover:shadow-2xl transition transform hover:-translate-y-2 service-card card-3d">
                     <div class="w-14 h-14 bg-gradient-to-br from-red-500 to-red-600 rounded-lg flex items-center justify-center mb-4">
                         <i class="fas fa-ellipsis-h text-white text-2xl"></i>
                     </div>
-                    <h3 class="text-xl font-semibold text-gray-900 mb-2">その他専門工事</h3>
-                    <p class="text-gray-600">
+                    <h3 class="text-xl font-semibold text-white mb-2">その他専門工事</h3>
+                    <p class="text-gray-300">
                         左官・建具・電気通信・鉄筋など9種の専門工事に対応
                     </p>
                 </div>
@@ -310,50 +389,51 @@
     </section>
 
     <!-- Features Section -->
-    <section class="py-20 bg-white">
+    <section class="py-20 section-gradient-alt relative overflow-hidden">
+        <div class="grid-pattern"></div>
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="text-center mb-16">
-                <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+            <div class="text-center mb-16 relative z-10">
+                <h2 class="text-3xl md:text-4xl font-bold text-white mb-4 neon-text">
                     選ばれる理由
                 </h2>
-                <p class="text-lg text-gray-600">
+                <p class="text-lg text-gray-300">
                     一進総業が信頼される3つのポイント
                 </p>
             </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                <div class="text-center feature-item">
-                    <div class="w-20 h-20 bg-gradient-to-br from-primary to-accent rounded-full flex items-center justify-center mx-auto mb-4 feature-icon">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 relative z-10">
+                <div class="text-center feature-item glass-card rounded-xl p-8">
+                    <div class="w-20 h-20 bg-gradient-to-br from-primary to-accent rounded-full flex items-center justify-center mx-auto mb-4 feature-icon glow">
                         <i class="fas fa-certificate text-white text-3xl"></i>
                     </div>
-                    <h3 class="text-xl font-semibold text-gray-900 mb-2">
+                    <h3 class="text-xl font-semibold text-white mb-2">
                         <span class="count-up" data-target="14">0</span>種の専門資格
                     </h3>
-                    <p class="text-gray-600">
+                    <p class="text-gray-300">
                         多岐にわたる建設工事の専門資格を保有し、ワンストップで対応可能
                     </p>
                 </div>
 
-                <div class="text-center feature-item">
-                    <div class="w-20 h-20 bg-gradient-to-br from-primary to-accent rounded-full flex items-center justify-center mx-auto mb-4 feature-icon">
+                <div class="text-center feature-item glass-card rounded-xl p-8">
+                    <div class="w-20 h-20 bg-gradient-to-br from-primary to-accent rounded-full flex items-center justify-center mx-auto mb-4 feature-icon glow">
                         <i class="fas fa-map-marked-alt text-white text-3xl"></i>
                     </div>
-                    <h3 class="text-xl font-semibold text-gray-900 mb-2">
+                    <h3 class="text-xl font-semibold text-white mb-2">
                         <span class="count-up" data-target="47">0</span>都道府県対応
                     </h3>
-                    <p class="text-gray-600">
+                    <p class="text-gray-300">
                         日本全国どこでも、高品質な施工サービスをご提供します
                     </p>
                 </div>
 
-                <div class="text-center feature-item">
-                    <div class="w-20 h-20 bg-gradient-to-br from-primary to-accent rounded-full flex items-center justify-center mx-auto mb-4 feature-icon">
+                <div class="text-center feature-item glass-card rounded-xl p-8">
+                    <div class="w-20 h-20 bg-gradient-to-br from-primary to-accent rounded-full flex items-center justify-center mx-auto mb-4 feature-icon glow">
                         <i class="fas fa-handshake text-white text-3xl"></i>
                     </div>
-                    <h3 class="text-xl font-semibold text-gray-900 mb-2">
+                    <h3 class="text-xl font-semibold text-white mb-2">
                         <span class="count-up" data-target="500">0</span>+プロジェクト
                     </h3>
-                    <p class="text-gray-600">
+                    <p class="text-gray-300">
                         2019年創業以来、数多くのプロジェクトで信頼を積み重ねています
                     </p>
                 </div>
@@ -362,42 +442,45 @@
     </section>
 
     <!-- Company Info Section -->
-    <section id="about" class="py-20 bg-gray-50">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="bg-white rounded-2xl shadow-xl p-8 md:p-12">
-                <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-8 text-center">
-                    会社概要
-                </h2>
+    <section id="about" class="py-20 section-gradient relative overflow-hidden">
+        <div class="grid-pattern"></div>
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            <div class="gradient-border rounded-2xl">
+                <div class="glass-card rounded-2xl p-8 md:p-12">
+                    <h2 class="text-3xl md:text-4xl font-bold text-white mb-8 text-center neon-text">
+                        会社概要
+                    </h2>
                 
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div class="border-b pb-4">
-                        <p class="text-gray-600 mb-1">会社名</p>
-                        <p class="text-lg font-semibold text-gray-900">一進総業株式会社</p>
-                    </div>
-                    
-                    <div class="border-b pb-4">
-                        <p class="text-gray-600 mb-1">法人番号</p>
-                        <p class="text-lg font-semibold text-gray-900">0500-01-056997</p>
-                    </div>
-                    
-                    <div class="border-b pb-4">
-                        <p class="text-gray-600 mb-1">設立</p>
-                        <p class="text-lg font-semibold text-gray-900">令和元年7月18日</p>
-                    </div>
-                    
-                    <div class="border-b pb-4">
-                        <p class="text-gray-600 mb-1">資本金</p>
-                        <p class="text-lg font-semibold text-gray-900">297万円</p>
-                    </div>
-                    
-                    <div class="border-b pb-4">
-                        <p class="text-gray-600 mb-1">所在地</p>
-                        <p class="text-lg font-semibold text-gray-900">茨城県土浦市小松一丁目24番37号</p>
-                    </div>
-                    
-                    <div class="border-b pb-4">
-                        <p class="text-gray-600 mb-1">代表取締役</p>
-                        <p class="text-lg font-semibold text-gray-900">浦井 裕一</p>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div class="border-b border-gray-600 pb-4">
+                            <p class="text-gray-400 mb-1">会社名</p>
+                            <p class="text-lg font-semibold text-white">一進総業株式会社</p>
+                        </div>
+                        
+                        <div class="border-b border-gray-600 pb-4">
+                            <p class="text-gray-400 mb-1">法人番号</p>
+                            <p class="text-lg font-semibold text-white">0500-01-056997</p>
+                        </div>
+                        
+                        <div class="border-b border-gray-600 pb-4">
+                            <p class="text-gray-400 mb-1">設立</p>
+                            <p class="text-lg font-semibold text-white">令和元年7月18日</p>
+                        </div>
+                        
+                        <div class="border-b border-gray-600 pb-4">
+                            <p class="text-gray-400 mb-1">資本金</p>
+                            <p class="text-lg font-semibold text-white">297万円</p>
+                        </div>
+                        
+                        <div class="border-b border-gray-600 pb-4">
+                            <p class="text-gray-400 mb-1">所在地</p>
+                            <p class="text-lg font-semibold text-white">茨城県土浦市小松一丁目24番37号</p>
+                        </div>
+                        
+                        <div class="border-b border-gray-600 pb-4">
+                            <p class="text-gray-400 mb-1">代表取締役</p>
+                            <p class="text-lg font-semibold text-white">浦井 裕一</p>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -405,7 +488,8 @@
     </section>
 
     <!-- CTA Section -->
-    <section id="contact" class="py-20 bg-gradient-to-r from-primary to-accent">
+    <section id="contact" class="py-20 bg-gradient-to-r from-primary to-accent relative overflow-hidden">
+        <div class="absolute inset-0 bg-black opacity-20"></div>
         <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
             <h2 class="text-3xl md:text-4xl font-bold text-white mb-4">
                 プロジェクトのご相談はお気軽に
@@ -464,11 +548,114 @@
 
     <!-- JavaScript -->
     <script>
+        // シンプルな波形アニメーション
+        let waveScene, waveCamera, waveRenderer;
+        let waveLines = [];
+        let waveTime = 0;
+        
+        function initSimpleWaves() {
+            const canvas = document.getElementById('wave-canvas');
+            
+            // Scene setup
+            waveScene = new THREE.Scene();
+            
+            // Camera setup
+            waveCamera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 1, 1000);
+            waveCamera.position.set(0, 0, 100);
+            
+            // Renderer setup
+            waveRenderer = new THREE.WebGLRenderer({
+                canvas: canvas,
+                antialias: true,
+                alpha: true
+            });
+            waveRenderer.setSize(window.innerWidth, window.innerHeight);
+            waveRenderer.setPixelRatio(window.devicePixelRatio);
+            waveRenderer.setClearColor(0x000000, 0);
+            
+            // Create simple wave lines
+            createSimpleWaveLines();
+            
+            // Start animation
+            animateWaves();
+        }
+        
+        function createSimpleWaveLines() {
+            const lineCount = 5;
+            
+            for (let j = 0; j < lineCount; j++) {
+                const material = new THREE.LineBasicMaterial({
+                    color: new THREE.Color().setHSL(0.55 + j * 0.05, 0.7, 0.5),
+                    transparent: true,
+                    opacity: 0.3,
+                    blending: THREE.AdditiveBlending
+                });
+                
+                const geometry = new THREE.BufferGeometry();
+                const points = [];
+                const segments = 50;
+                
+                for (let i = 0; i <= segments; i++) {
+                    const x = (i / segments - 0.5) * 200;
+                    const y = 0;
+                    const z = j * 5 - 10;
+                    points.push(new THREE.Vector3(x, y, z));
+                }
+                
+                geometry.setFromPoints(points);
+                
+                const line = new THREE.Line(geometry, material);
+                waveScene.add(line);
+                waveLines.push(line);
+            }
+        }
+        
+        function animateWaves() {
+            requestAnimationFrame(animateWaves);
+            
+            waveTime += 0.02;
+            
+            // Update wave positions
+            waveLines.forEach((line, lineIndex) => {
+                const positions = line.geometry.attributes.position.array;
+                const segments = positions.length / 3;
+                
+                for (let i = 0; i < segments; i++) {
+                    const x = positions[i * 3];
+                    const phase = x * 0.02 + waveTime + lineIndex * 0.5;
+                    positions[i * 3 + 1] = Math.sin(phase) * 10 * Math.cos(phase * 0.5);
+                }
+                
+                line.geometry.attributes.position.needsUpdate = true;
+            });
+            
+            // Rotate camera slightly
+            waveCamera.position.x = Math.sin(waveTime * 0.1) * 20;
+            waveCamera.position.y = Math.cos(waveTime * 0.15) * 10;
+            waveCamera.lookAt(0, 0, 0);
+            
+            waveRenderer.render(waveScene, waveCamera);
+        }
+        
+        // Window resize handler for waves
+        function onWaveResize() {
+            if (waveCamera && waveRenderer) {
+                waveCamera.aspect = window.innerWidth / window.innerHeight;
+                waveCamera.updateProjectionMatrix();
+                waveRenderer.setSize(window.innerWidth, window.innerHeight);
+            }
+        }
+        
+        window.addEventListener('resize', onWaveResize);
+        
         // GSAPアニメーション
         gsap.registerPlugin(ScrollTrigger, TextPlugin);
         
         // ローディングアニメーション
         window.addEventListener('load', () => {
+            // 波形アニメーションを初期化
+            initSimpleWaves();
+            
             gsap.to('.loader-wrapper', {
                 opacity: 0,
                 duration: 1,
@@ -610,7 +797,7 @@
             scale: 1.1
         });
         
-        // セクションタイトルのアニメーション
+        // セクションタイトルのアニメーション（グラデーション効果を削除）
         gsap.utils.toArray('section h2').forEach(title => {
             gsap.from(title, {
                 scrollTrigger: {
@@ -620,23 +807,9 @@
                 },
                 opacity: 0,
                 y: 30,
+                scale: 0.9,
                 duration: 1,
                 ease: 'power3.out'
-            });
-            
-            // テキストにグラデーション効果
-            gsap.to(title, {
-                scrollTrigger: {
-                    trigger: title,
-                    start: 'top 80%',
-                    toggleActions: 'play none none reverse'
-                },
-                backgroundImage: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-                backgroundClip: 'text',
-                '-webkit-background-clip': 'text',
-                color: 'transparent',
-                duration: 1,
-                delay: 0.5
             });
         });
         
