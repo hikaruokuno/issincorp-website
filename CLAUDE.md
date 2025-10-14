@@ -23,7 +23,6 @@ Corporate website for 一進総業株式会社 (Isshin Sogyo Co., Ltd.)
 ├── services.html     # Services page (14 construction services)
 ├── about.html        # Company information
 ├── contact.html      # Contact form
-├── privacy.html      # Privacy policy
 └── assets/
     └── images/       # Company images and icons
 ```

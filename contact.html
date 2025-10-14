@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="一進総業株式会社のお問い合わせ窓口です。建設工事やイベント設営、設備メンテナンスなどのご相談を承ります。">
+    <title>お問い合わせ | 一進総業株式会社</title>
+
+    <script>
+        tailwind = window.tailwind || {};
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#1e3a8a',
+                        secondary: '#0f172a',
+                        accent: '#38bdf8'
+                    },
+                    fontFamily: {
+                        sans: ['system-ui', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'Helvetica Neue', 'Arial', 'sans-serif']
+                    }
+                }
+            }
+        };
+    </script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Yuji+Syuku&display=swap">
+
+    <style>
+        .loader-wrapper {
+            position: fixed;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: radial-gradient(circle at top left, rgba(59, 130, 246, 0.25), rgba(15, 23, 42, 0.95));
+            z-index: 50;
+            transition: opacity 0.5s ease;
+        }
+
+        .loader {
+            width: 64px;
+            height: 64px;
+            border: 3px solid rgba(255, 255, 255, 0.25);
+            border-top-color: #fff;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        .logo {
+            font-family: 'Yuji Syuku', 'Hiragino Mincho ProN', 'Yu Mincho', serif;
+        }
+
+        .background-gradient {
+            background: radial-gradient(circle at 0% 0%, rgba(56, 189, 248, 0.18), transparent 50%),
+                        radial-gradient(circle at 100% 0%, rgba(59, 130, 246, 0.14), transparent 45%),
+                        #020617;
+        }
+
+        .glow-card {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .glow-card::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, rgba(56, 189, 248, 0.2), rgba(59, 130, 246, 0.05));
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+
+        .glow-card:hover::before {
+            opacity: 1;
+        }
+    </style>
+</head>
+<body class="background-gradient text-slate-100">
+    <div class="loader-wrapper" role="status" aria-live="polite">
+        <div class="loader"></div>
+    </div>
+
+    <header class="fixed top-0 inset-x-0 z-40 bg-slate-900/95 backdrop-blur border-b border-slate-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <a href="index.html" class="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-400 logo">
+                    一進総業株式会社
+                </a>
+                <nav class="hidden md:flex items-center space-x-8 text-sm font-medium">
+                    <a href="index.html" class="text-slate-300 hover:text-cyan-400 transition">ホーム</a>
+                    <a href="services.html" class="text-slate-300 hover:text-cyan-400 transition">事業内容</a>
+                    <a href="about.html" class="text-slate-300 hover:text-cyan-400 transition">会社概要</a>
+                    <a href="contact.html" class="bg-gradient-to-r from-cyan-500 to-blue-500 text-white px-4 py-2 rounded-lg shadow hover:from-cyan-600 hover:to-blue-600 transition">
+                        お問い合わせ
+                    </a>
+                </nav>
+                <button class="md:hidden text-slate-300 hover:text-cyan-400 transition" aria-label="メニューを開く" onclick="toggleMenu()">
+                    <i class="fas fa-bars text-2xl"></i>
+                </button>
+            </div>
+        </div>
+        <div id="mobile-menu" class="md:hidden hidden border-t border-slate-800 bg-slate-900/95 backdrop-blur">
+            <nav class="px-4 py-4 space-y-3 text-sm font-medium">
+                <a href="index.html" class="block text-slate-300 hover:text-cyan-400 transition">ホーム</a>
+                <a href="services.html" class="block text-slate-300 hover:text-cyan-400 transition">事業内容</a>
+                <a href="about.html" class="block text-slate-300 hover:text-cyan-400 transition">会社概要</a>
+                <a href="contact.html" class="block text-cyan-400">お問い合わせ</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="pt-24 pb-24">
+        <section class="relative overflow-hidden">
+            <div class="absolute inset-0 bg-gradient-to-br from-slate-900/90 via-slate-900/40 to-sky-900/20"></div>
+            <div class="relative max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-24 text-center">
+                <p class="text-sm uppercase tracking-[0.4em] text-slate-400 mb-4">Contact</p>
+                <h1 class="text-3xl md:text-5xl font-bold text-white mb-6 leading-tight">
+                    プロジェクトのご相談・お見積りは<br class="hidden md:block">こちらからお問い合わせください
+                </h1>
+                <p class="text-lg md:text-xl text-slate-300">
+                    建築工事、イベント設営、外構工事、設備メンテナンスなど、案件の規模を問わずお気軽にご連絡ください。
+                </p>
+            </div>
+        </section>
+
+        <section class="py-20">
+            <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 lg:grid-cols-3 gap-8">
+                <div class="lg:col-span-1 space-y-6">
+                    <div class="glow-card bg-slate-900/70 border border-slate-800 rounded-2xl p-8 backdrop-blur">
+                        <h2 class="text-2xl font-bold text-white mb-4">お問い合わせ先</h2>
+                        <p class="text-sm text-slate-300 leading-relaxed">
+                            ご相談内容を確認後、担当者より2営業日以内にご連絡いたします。
+                        </p>
+                        <div class="mt-6 space-y-4 text-sm text-slate-300">
+                            <div class="flex items-start gap-3">
+                                <i class="fas fa-envelope text-cyan-400 mt-1"></i>
+                                <div>
+                                    <p class="text-xs uppercase tracking-[0.3em] text-slate-400">E-mail</p>
+                                    <a href="mailto:info@isshin-sogyo.com" class="text-white font-semibold hover:text-cyan-300 transition">info@isshin-sogyo.com</a>
+                                </div>
+                            </div>
+                            <div class="flex items-start gap-3">
+                                <i class="fas fa-map-marker-alt text-cyan-400 mt-1"></i>
+                                <div>
+                                    <p class="text-xs uppercase tracking-[0.3em] text-slate-400">Office</p>
+                                    <p class="text-white font-semibold leading-relaxed">
+                                        〒300-0823<br>
+                                        茨城県土浦市小松一丁目24番37号
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="flex items-start gap-3">
+                                <i class="fas fa-clock text-cyan-400 mt-1"></i>
+                                <div>
+                                    <p class="text-xs uppercase tracking-[0.3em] text-slate-400">Business Hours</p>
+                                    <p class="text-white font-semibold leading-relaxed">
+                                        平日 9:00〜18:00<br>
+                                        ※現場対応のため不在の場合がございます
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="glow-card bg-slate-900/70 border border-slate-800 rounded-2xl p-8 backdrop-blur">
+                        <h3 class="text-lg font-semibold text-white mb-3">対応可能なご相談</h3>
+                        <ul class="space-y-3 text-sm text-slate-300">
+                            <li><i class="fas fa-check text-cyan-400 mr-2"></i>建設・改修工事の計画・見積り</li>
+                            <li><i class="fas fa-check text-cyan-400 mr-2"></i>イベント設営・仮設工事のご相談</li>
+                            <li><i class="fas fa-check text-cyan-400 mr-2"></i>外構工事や設備メンテナンスのご依頼</li>
+                            <li><i class="fas fa-check text-cyan-400 mr-2"></i>協力会社・パートナーシップのご提案</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="lg:col-span-2">
+                    <div class="bg-slate-900/80 border border-slate-800 rounded-3xl p-8 md:p-10 backdrop-blur">
+                        <h2 class="text-2xl font-bold text-white mb-6">お問い合わせフォーム</h2>
+                        <p class="text-sm text-slate-300 mb-8">
+                            必要事項をご入力のうえ送信してください。内容を確認後、担当者よりご連絡いたします。
+                            <span class="block text-xs text-slate-500 mt-2">※ご入力いただいた情報は、お問い合わせ対応以外の目的では利用いたしません。</span>
+                        </p>
+                        <form id="contact-form" class="space-y-6 relative">
+                            <div class="absolute -left-[9999px] top-auto opacity-0" aria-hidden="true">
+                                <label for="website">ウェブサイト</label>
+                                <input id="website" name="website" type="text" tabindex="-1" autocomplete="off">
+                            </div>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div>
+                                    <label for="name" class="block text-sm font-semibold text-slate-200 mb-2">お名前<span class="text-cyan-400 ml-1">必須</span></label>
+                                    <input id="name" name="name" type="text" required placeholder="例）山田 太郎" class="w-full px-4 py-3 bg-slate-950/70 border border-slate-800 rounded-lg text-white focus:outline-none focus:border-cyan-400 transition">
+                                </div>
+                                <div>
+                                    <label for="company" class="block text-sm font-semibold text-slate-200 mb-2">会社名<span class="text-slate-400 ml-1 text-xs">任意</span></label>
+                                    <input id="company" name="company" type="text" placeholder="例）一進総業株式会社" class="w-full px-4 py-3 bg-slate-950/70 border border-slate-800 rounded-lg text-white focus:outline-none focus:border-cyan-400 transition">
+                                </div>
+                                <div>
+                                    <label for="email" class="block text-sm font-semibold text-slate-200 mb-2">メールアドレス<span class="text-cyan-400 ml-1">必須</span></label>
+                                    <input id="email" name="email" type="email" required placeholder="例）info@example.com" class="w-full px-4 py-3 bg-slate-950/70 border border-slate-800 rounded-lg text-white focus:outline-none focus:border-cyan-400 transition">
+                                </div>
+                                <div>
+                                    <label for="phone" class="block text-sm font-semibold text-slate-200 mb-2">電話番号<span class="text-slate-400 ml-1 text-xs">任意</span></label>
+                                    <input id="phone" name="phone" type="tel" placeholder="例）090-1234-5678" class="w-full px-4 py-3 bg-slate-950/70 border border-slate-800 rounded-lg text-white focus:outline-none focus:border-cyan-400 transition">
+                                </div>
+                                <div class="md:col-span-2">
+                                    <label for="service" class="block text-sm font-semibold text-slate-200 mb-2">ご相談内容の種別<span class="text-cyan-400 ml-1">必須</span></label>
+                                    <select id="service" name="service" required class="w-full px-4 py-3 bg-slate-950/70 border border-slate-800 rounded-lg text-white focus:outline-none focus:border-cyan-400 transition">
+                                        <option value="" disabled selected>選択してください</option>
+                                        <option value="construction">建築・改修工事について</option>
+                                        <option value="event">イベント設営・仮設工事について</option>
+                                        <option value="exterior">外構工事・ランドスケープについて</option>
+                                        <option value="maintenance">設備メンテナンスについて</option>
+                                        <option value="partnership">協力会社・パートナーについて</option>
+                                        <option value="others">その他</option>
+                                    </select>
+                                </div>
+                                <div class="md:col-span-2">
+                                    <label for="message" class="block text-sm font-semibold text-slate-200 mb-2">お問い合わせ内容<span class="text-cyan-400 ml-1">必須</span></label>
+                                    <textarea id="message" name="message" rows="6" required placeholder="案件の概要・ご質問などをご記入ください" class="w-full px-4 py-3 bg-slate-950/70 border border-slate-800 rounded-lg text-white focus:outline-none focus:border-cyan-400 transition"></textarea>
+                                </div>
+                            </div>
+                            <p class="mt-6 text-xs text-slate-400">
+                                お送りいただいた情報は、お問い合わせ内容への対応にのみ利用し、第三者へ提供することはありません。
+                            </p>
+                            <button type="submit" class="w-full bg-gradient-to-r from-cyan-500 to-blue-500 text-white font-semibold py-3 rounded-lg shadow hover:from-cyan-600 hover:to-blue-600 transition">
+                                入力内容を送信する
+                            </button>
+                            <div id="form-message" class="hidden text-sm font-medium px-4 py-3 rounded-lg border border-transparent" role="status" aria-live="polite"></div>
+                        </form>
+                        <p class="text-xs text-slate-500 mt-6">
+                            ※フォーム送信後、自動返信メールが届きます。届かない場合はメールアドレスをご確認のうえ、再度送信いただくか info@isshin-sogyo.com までご連絡ください。
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="py-16">
+            <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="bg-gradient-to-r from-cyan-500/10 via-blue-500/10 to-purple-500/10 border border-cyan-500/40 rounded-3xl p-10 backdrop-blur text-center">
+                    <h2 class="text-3xl md:text-4xl font-bold text-white mb-4">現場の課題やお困りごとがございましたら、いつでもご相談ください</h2>
+                    <p class="text-base md:text-lg text-slate-200 mb-8">
+                        お急ぎの場合は、フォーム送信後に info@isshin-sogyo.com へ直接メールいただければ優先して対応いたします。
+                    </p>
+                    <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
+                        <a href="#contact-form" class="inline-flex items-center bg-gradient-to-r from-cyan-500 to-blue-600 text-white font-semibold px-6 py-3 rounded-lg shadow hover:from-cyan-600 hover:to-blue-700 transition">
+                            <i class="fas fa-paper-plane mr-2"></i>
+                            お問い合わせフォームへ
+                        </a>
+                        <a href="services.html" class="inline-flex items-center text-cyan-300 hover:text-cyan-200 transition">
+                            <i class="fas fa-briefcase mr-2"></i>
+                            事業内容を見る
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="bg-slate-950/90 border-t border-slate-800">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-14">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8 text-sm">
+                <div>
+                    <h3 class="text-white text-lg font-semibold mb-4">一進総業株式会社</h3>
+                    <p class="text-slate-400 leading-relaxed">
+                        総合建設のプロフェッショナルとして、建築から設備メンテナンスまで現場づくりを支えます。
+                    </p>
+                </div>
+                <div>
+                    <h4 class="text-white text-base font-semibold mb-4">クイックリンク</h4>
+                    <ul class="space-y-2 text-slate-400">
+                        <li><a href="index.html" class="hover:text-cyan-300 transition">ホーム</a></li>
+                        <li><a href="services.html" class="hover:text-cyan-300 transition">事業内容</a></li>
+                        <li><a href="about.html" class="hover:text-cyan-300 transition">会社概要</a></li>
+                        <li><a href="contact.html" class="hover:text-cyan-300 transition">お問い合わせ</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-white text-base font-semibold mb-4">事業情報</h4>
+                    <ul class="space-y-2 text-slate-400">
+                        <li>法人番号: 0500-01-056997</li>
+                        <li>資本金: 990万円</li>
+                        <li>設立: 令和7年7月18日</li>
+                        <li>対応エリア: 全国47都道府県</li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-white text-base font-semibold mb-4">お問い合わせ</h4>
+                    <p class="text-slate-400 mb-3 leading-relaxed">
+                        〒300-0823<br>
+                        茨城県土浦市小松一丁目24番37号
+                    </p>
+                    <a href="mailto:info@isshin-sogyo.com" class="inline-flex items-center text-cyan-300 hover:text-cyan-200 transition">
+                        <i class="fas fa-envelope mr-2"></i>
+                        info@isshin-sogyo.com
+                    </a>
+                </div>
+            </div>
+            <div class="mt-12 border-t border-slate-800 pt-6 flex flex-col sm:flex-row items-center justify-between text-xs text-slate-500">
+                <p>&copy; 2024 一進総業株式会社</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        const loader = document.querySelector('.loader-wrapper');
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                loader.classList.add('opacity-0', 'pointer-events-none');
+            }, 400);
+        });
+
+        function toggleMenu() {
+            const menu = document.getElementById('mobile-menu');
+            menu.classList.toggle('hidden');
+        }
+
+        const contactForm = document.getElementById('contact-form');
+        if (contactForm) {
+            const formMessage = document.getElementById('form-message');
+            const submitButton = contactForm.querySelector('button[type="submit"]');
+            const defaultButtonLabel = submitButton ? submitButton.textContent : '';
+
+            const resetMessage = () => {
+                if (!formMessage) return;
+                formMessage.textContent = '';
+                formMessage.classList.add('hidden');
+                formMessage.classList.remove(
+                    'bg-cyan-500/10',
+                    'text-cyan-100',
+                    'border-cyan-500/60',
+                    'bg-red-500/10',
+                    'text-red-200',
+                    'border-red-500/60'
+                );
+                formMessage.classList.add('border-transparent');
+            };
+
+            const showMessage = (message, variant = 'success') => {
+                if (!formMessage) return;
+                formMessage.textContent = message;
+                formMessage.classList.remove('hidden', 'border-transparent');
+
+                if (variant === 'error') {
+                    formMessage.classList.remove('bg-cyan-500/10', 'text-cyan-100', 'border-cyan-500/60');
+                    formMessage.classList.add('bg-red-500/10', 'text-red-200', 'border-red-500/60');
+                } else {
+                    formMessage.classList.remove('bg-red-500/10', 'text-red-200', 'border-red-500/60');
+                    formMessage.classList.add('bg-cyan-500/10', 'text-cyan-100', 'border-cyan-500/60');
+                }
+            };
+
+            contactForm.addEventListener('submit', async (event) => {
+                event.preventDefault();
+                resetMessage();
+
+                if (submitButton) {
+                    submitButton.disabled = true;
+                    submitButton.textContent = '送信中...';
+                }
+
+                const formData = new FormData(contactForm);
+
+                const payload = {
+                    name: formData.get('name')?.toString().trim() || '',
+                    email: formData.get('email')?.toString().trim() || '',
+                    phone: formData.get('phone')?.toString().trim() || '',
+                    company: formData.get('company')?.toString().trim() || '',
+                    service: formData.get('service')?.toString() || '',
+                    message: formData.get('message')?.toString().trim() || '',
+                    website: formData.get('website')?.toString().trim() || '',
+                };
+
+                try {
+                    const response = await fetch('/api/contact', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify(payload),
+                    });
+
+                    const result = await response.json().catch(() => ({}));
+
+                    if (response.ok) {
+                        showMessage(result.message || 'お問い合わせありがとうございます。確認次第ご連絡いたします。');
+                        contactForm.reset();
+                    } else {
+                        showMessage(result.error || 'エラーが発生しました。時間をおいて再度お試しください。', 'error');
+                    }
+                } catch (error) {
+                    console.error('Contact form submission failed:', error);
+                    showMessage('通信エラーが発生しました。時間をおいて再度お試しください。', 'error');
+                } finally {
+                    if (submitButton) {
+                        submitButton.disabled = false;
+                        submitButton.textContent = defaultButtonLabel || '入力内容を送信する';
+                    }
+
+                    if (formMessage) {
+                        setTimeout(() => {
+                            resetMessage();
+                        }, 6000);
+                    }
+                }
+            });
+        }
+    </script>
+</body>
+</html>
