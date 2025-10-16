@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://isshin-sogyo.com/sitemap.xml
+Sitemap: https://isshin-construction.com/sitemap.xml
