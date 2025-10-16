@@ -4,6 +4,32 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="一進総業株式会社は建築工事を中心に、イベント設営・外構工事・設備メンテナンスまで柔軟にサポートする施工会社です。協力会社と連携し、安全で丁寧な仕事をご提供します。">
+    <link rel="canonical" href="https://isshin-sogyo.com/">
+    <meta property="og:locale" content="ja_JP">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="一進総業株式会社 | 総合建設のプロフェッショナル">
+    <meta property="og:description" content="一進総業株式会社は建築工事を中心に、イベント設営・外構工事・設備メンテナンスまで柔軟にサポートする施工会社です。協力会社と連携し、安全で丁寧な仕事をご提供します。">
+    <meta property="og:url" content="https://isshin-sogyo.com/">
+    <meta property="og:site_name" content="一進総業株式会社">
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="一進総業株式会社 | 総合建設のプロフェッショナル">
+    <meta name="twitter:description" content="建築工事からイベント設営、外構工事、設備メンテナンスまで、お客様の現場づくりを丁寧にサポートします。">
+    <script type="application/ld+json">
+        {
+            "@context": "https://schema.org",
+            "@type": "Organization",
+            "name": "一進総業株式会社",
+            "url": "https://isshin-sogyo.com/",
+            "email": "info@isshin-sogyo.com",
+            "address": {
+                "@type": "PostalAddress",
+                "postalCode": "300-0823",
+                "addressCountry": "JP",
+                "addressRegion": "茨城県",
+                "addressLocality": "土浦市小松一丁目24番37号"
+            }
+        }
+    </script>
     <title>一進総業株式会社 | 総合建設のプロフェッショナル</title>
     
     <!-- Tailwind CSS CDN -->
@@ -282,7 +308,7 @@
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-32 md:py-48">
                 <div class="text-center">
                     <h1 class="text-4xl md:text-6xl font-bold text-white mb-6 drop-shadow-lg hero-title">
-                        <span class="hero-text"></span>
+                        <span class="hero-text" data-text="建築からイベントまで寄り添う">建築からイベントまで寄り添う</span>
                     </h1>
                     <p class="text-xl md:text-2xl text-gray-200 mb-8 drop-shadow-lg hero-subtitle">
                         一進総業株式会社
@@ -661,15 +687,20 @@
             });
             
             // ヒーローセクションのタイピングアニメーション
-            gsap.to('.hero-text', {
-                duration: 2,
-                text: {
-                    value: '建築からイベントまで寄り添う',
-                    delimiter: ''
-                },
-                ease: 'none',
-                delay: 0.5
-            });
+            const heroTextElement = document.querySelector('.hero-text');
+            if (heroTextElement) {
+                const heroTargetText = heroTextElement.dataset.text || heroTextElement.textContent || '';
+                heroTextElement.textContent = '';
+                gsap.to(heroTextElement, {
+                    duration: 2,
+                    text: {
+                        value: heroTargetText,
+                        delimiter: ''
+                    },
+                    ease: 'none',
+                    delay: 0.5
+                });
+            }
             
             // ヒーロー要素のフェードイン
             gsap.timeline()
